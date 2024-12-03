@@ -162,7 +162,7 @@ vim.opt.inccommand = 'split'
 vim.opt.cursorline = true
 
 -- Minimal number of screen lines to keep above and below the cursor.
-vim.opt.scrolloff = 8
+vim.opt.scrolloff = 40
 
 vim.opt.tabstop = 2
 vim.opt.shiftwidth = 2
@@ -1012,6 +1012,7 @@ require('lazy').setup({
     --    - Treesitter + textobjects: https://github.com/nvim-treesitter/nvim-treesitter-textobjects
   },
   'nvim-pack/nvim-spectre',
+  'github/copilot.vim',
   -- The following comments only work if you have downloaded the kickstart repo, not just copy pasted the
   -- init.lua. If you want these files, they are in the repository, so you can just download them and
   -- place them in the correct locations.
