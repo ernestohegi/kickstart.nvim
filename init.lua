@@ -518,6 +518,7 @@ require('lazy').setup({
         },
         view = {
           width = 30,
+          adaptive_size = true,
         },
         renderer = {
           group_empty = true,
@@ -937,7 +938,7 @@ require('lazy').setup({
       -- Load the colorscheme here.
       -- Like many other themes, this one has different styles, and you could load
       -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-      require('rose-pine').setup { styles = { transparency = true } }
+      require('rose-pine').setup { styles = { transparency = false } }
 
       vim.cmd.colorscheme 'rose-pine'
 
@@ -1013,6 +1014,7 @@ require('lazy').setup({
   },
   'nvim-pack/nvim-spectre',
   'github/copilot.vim',
+  'tpope/vim-commentary',
   -- The following comments only work if you have downloaded the kickstart repo, not just copy pasted the
   -- init.lua. If you want these files, they are in the repository, so you can just download them and
   -- place them in the correct locations.
