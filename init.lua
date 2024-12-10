@@ -96,6 +96,8 @@ vim.g.maplocalleader = ' '
 -- Set to true if you have a Nerd Font installed and selected in the terminal
 vim.g.have_nerd_font = true
 
+vim.g.lazyvim_prettier_needs_config = true
+
 vim.opt.foldenable = false
 
 -- [[ Setting options ]]
@@ -166,7 +168,7 @@ vim.opt.scrolloff = 40
 
 vim.opt.tabstop = 2
 vim.opt.shiftwidth = 2
-vim.opt.expandtab = true
+vim.opt.expandtab = false
 
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
@@ -179,7 +181,7 @@ vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
 
 -- Open NvimTree
-vim.keymap.set('n', '<leader>e', ':NvimTreeToggle<CR>', { desc = 'Toggles nvim-tree visibility' })
+vim.keymap.set('n', '<leader>e', ':NvimTreeToggle<CR>', { desc = 'Toggles NvimTree' })
 
 -- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
 -- for people to discover. Otherwise, you normally need to press <C-\><C-n>, which
@@ -204,7 +206,14 @@ vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right win
 vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
 
--- [[ Basic Autocommands ]]
+vim.keymap.set('n', '<leader>S', '<cmd>lua require("spectre").toggle()<CR>', {
+  desc = 'Toggle Spectre',
+})
+
+vim.keymap.set('n', '<leader>L', '<cmd>Lazy<CR>', {
+  desc = 'Toggle LazyVim',
+})
+
 --  See `:help lua-guide-autocommands`
 
 -- Highlight when yanking (copying) text
@@ -483,7 +492,7 @@ require('lazy').setup({
           -- https://github.com/microsoft/TypeScript/blob/3c221fc086be52b19801f6e8d82596d04607ede6/src/compiler/utilitiesPublic.ts#L620
           tsserver_locale = 'en',
           -- mirror of VSCode's `typescript.suggest.completeFunctionCalls`
-          complete_function_calls = false,
+          complete_function_calls = true,
           include_completions_with_insert_text = true,
           -- CodeLens
           -- WARNING: Experimental feature also in VSCode, because it might hit performance of server.
@@ -496,7 +505,7 @@ require('lazy').setup({
           -- WARNING: it is disabled by default (maybe you configuration or distro already uses nvim-ts-autotag,
           -- that maybe have a conflict if enable this feature. )
           jsx_close_tag = {
-            enable = false,
+            enable = true,
             filetypes = { 'javascriptreact', 'typescriptreact' },
           },
         },
@@ -806,7 +815,7 @@ require('lazy').setup({
         -- python = { "isort", "black" },
         --
         -- You can use 'stop_after_first' to run the first available formatter from the list
-        -- javascript = { "prettierd", "prettier", stop_after_first = true },
+        javascript = { 'prettierd', 'prettier', stop_after_first = true },
       },
     },
   },
@@ -938,7 +947,7 @@ require('lazy').setup({
       -- Load the colorscheme here.
       -- Like many other themes, this one has different styles, and you could load
       -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-      require('rose-pine').setup { styles = { transparency = false } }
+      require('rose-pine').setup { styles = { transparency = true } }
 
       vim.cmd.colorscheme 'rose-pine'
 
@@ -1012,7 +1021,18 @@ require('lazy').setup({
     --    - Show your current context: https://github.com/nvim-treesitter/nvim-treesitter-context
     --    - Treesitter + textobjects: https://github.com/nvim-treesitter/nvim-treesitter-textobjects
   },
-  'nvim-pack/nvim-spectre',
+  {
+    'nvim-pack/nvim-spectre',
+    config = function()
+      require('spectre').setup {
+        default = {
+          replace = {
+            cmd = 'oxi',
+          },
+        },
+      }
+    end,
+  },
   'github/copilot.vim',
   'tpope/vim-commentary',
   -- The following comments only work if you have downloaded the kickstart repo, not just copy pasted the
