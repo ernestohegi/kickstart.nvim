@@ -815,7 +815,7 @@ require('lazy').setup({
         -- python = { "isort", "black" },
         --
         -- You can use 'stop_after_first' to run the first available formatter from the list
-        javascript = { 'prettierd', 'prettier', stop_after_first = true },
+        -- javascript = { 'prettierd', 'prettier', stop_after_first = true },
       },
     },
   },
@@ -947,7 +947,7 @@ require('lazy').setup({
       -- Load the colorscheme here.
       -- Like many other themes, this one has different styles, and you could load
       -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-      require('rose-pine').setup { styles = { transparency = true } }
+      require('rose-pine').setup { styles = { transparency = false } }
 
       vim.cmd.colorscheme 'rose-pine'
 
@@ -1024,13 +1024,13 @@ require('lazy').setup({
   {
     'nvim-pack/nvim-spectre',
     config = function()
-      require('spectre').setup {
-        default = {
-          replace = {
-            cmd = 'oxi',
-          },
-        },
-      }
+      --require('spectre').setup {
+      --default = {
+      --replace = {
+      -- cmd = 'oxi',
+      --},
+      --},
+      --}
     end,
   },
   'github/copilot.vim',
