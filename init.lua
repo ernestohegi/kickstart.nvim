@@ -10,9 +10,7 @@ vim.g.maplocalleader = ' '
 -- Set to true if you have a Nerd Font installed and selected in the terminal
 vim.g.have_nerd_font = true
 
-vim.g.lazyvim_prettier_needs_config = true
-
-vim.opt.foldenable = false
+require 'custom'
 
 -- [[ Setting options ]]
 -- See `:help vim.opt`
@@ -80,10 +78,6 @@ vim.opt.cursorline = true
 -- Minimal number of screen lines to keep above and below the cursor.
 vim.opt.scrolloff = 40
 
-vim.opt.tabstop = 2
-vim.opt.shiftwidth = 2
-vim.opt.expandtab = false
-
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
 
@@ -93,9 +87,6 @@ vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 
 -- Diagnostic keymaps
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
-
--- Open NvimTree
-vim.keymap.set('n', '<leader>e', ':NvimTreeToggle<CR>', { desc = 'Toggles NvimTree' })
 
 -- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
 -- for people to discover. Otherwise, you normally need to press <C-\><C-n>, which
@@ -120,13 +111,6 @@ vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right win
 vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
 
-vim.keymap.set('n', '<leader>S', '<cmd>lua require("spectre").toggle()<CR>', {
-  desc = 'Toggle Spectre',
-})
-
-vim.keymap.set('n', '<leader>L', '<cmd>Lazy<CR>', {
-  desc = 'Toggle LazyVim',
-})
 
 --  See `:help lua-guide-autocommands`
 
@@ -371,85 +355,6 @@ require('lazy').setup({
       vim.keymap.set('n', '<leader>sn', function()
         builtin.find_files { cwd = vim.fn.stdpath 'config' }
       end, { desc = '[S]earch [N]eovim files' })
-    end,
-  },
-
-  {
-    'pmizio/typescript-tools.nvim',
-    dependencies = { 'nvim-lua/plenary.nvim', 'neovim/nvim-lspconfig' },
-    opts = {},
-    config = function()
-      require('typescript-tools').setup {
-        settings = {
-          -- spawn additional tsserver instance to calculate diagnostics on it
-          separate_diagnostic_server = true,
-          -- "change"|"insert_leave" determine when the client asks the server about diagnostic
-          publish_diagnostic_on = 'insert_leave',
-          -- array of strings("fix_all"|"add_missing_imports"|"remove_unused"|
-          -- "remove_unused_imports"|"organize_imports") -- or string "all"
-          -- to include all supported code actions
-          -- specify commands exposed as code_actions
-          expose_as_code_action = {},
-          -- string|nil - specify a custom path to `tsserver.js` file, if this is nil or file under path
-          -- not exists then standard path resolution strategy is applied
-          tsserver_path = nil,
-          -- specify a list of plugins to load by tsserver, e.g., for support `styled-components`
-          -- (see 💅 `styled-components` support section)
-          tsserver_plugins = {},
-          -- this value is passed to: https://nodejs.org/api/cli.html#--max-old-space-sizesize-in-megabytes
-          -- memory limit in megabytes or "auto"(basically no limit)
-          tsserver_max_memory = 'auto',
-          -- described below
-          tsserver_format_options = {},
-          tsserver_file_preferences = {},
-          -- locale of all tsserver messages, supported locales you can find here:
-          -- https://github.com/microsoft/TypeScript/blob/3c221fc086be52b19801f6e8d82596d04607ede6/src/compiler/utilitiesPublic.ts#L620
-          tsserver_locale = 'en',
-          -- mirror of VSCode's `typescript.suggest.completeFunctionCalls`
-          complete_function_calls = true,
-          include_completions_with_insert_text = true,
-          -- CodeLens
-          -- WARNING: Experimental feature also in VSCode, because it might hit performance of server.
-          -- possible values: ("off"|"all"|"implementations_only"|"references_only")
-          code_lens = 'off',
-          -- by default code lenses are displayed on all referencable values and for some of you it can
-          -- be too much this option reduce count of them by removing member references from lenses
-          disable_member_code_lens = true,
-          -- JSXCloseTag
-          -- WARNING: it is disabled by default (maybe you configuration or distro already uses nvim-ts-autotag,
-          -- that maybe have a conflict if enable this feature. )
-          jsx_close_tag = {
-            enable = true,
-            filetypes = { 'javascriptreact', 'typescriptreact' },
-          },
-        },
-      }
-    end,
-  },
-
-  {
-    'nvim-tree/nvim-tree.lua',
-    version = '*',
-    lazy = false,
-    dependencies = {
-      'nvim-tree/nvim-web-devicons',
-    },
-    config = function()
-      require('nvim-tree').setup {
-        sort = {
-          sorter = 'case_sensitive',
-        },
-        view = {
-          width = 30,
-          adaptive_size = true,
-        },
-        renderer = {
-          group_empty = true,
-        },
-        filters = {
-          dotfiles = true,
-        },
-      }
     end,
   },
 
@@ -850,26 +755,6 @@ require('lazy').setup({
     end,
   },
 
-  { -- You can easily change to a different colorscheme.
-    -- Change the name of the colorscheme plugin below, and then
-    -- change the command in the config to whatever the name of that colorscheme is.
-    --
-    -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
-    'rose-pine/neovim',
-    priority = 1000, -- Make sure to load this before all the other start plugins.
-    init = function()
-      -- Load the colorscheme here.
-      -- Like many other themes, this one has different styles, and you could load
-      -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-      require('rose-pine').setup { styles = { transparency = true } }
-
-      vim.cmd.colorscheme 'rose-pine'
-
-      -- You can configure highlights by doing something like:
-      vim.cmd.hi 'Comment gui=none'
-    end,
-  },
-
   -- Highlight todo, notes, etc in comments
   { 'folke/todo-comments.nvim', event = 'VimEnter', dependencies = { 'nvim-lua/plenary.nvim' }, opts = { signs = false } },
 
@@ -935,82 +820,6 @@ require('lazy').setup({
     --    - Show your current context: https://github.com/nvim-treesitter/nvim-treesitter-context
     --    - Treesitter + textobjects: https://github.com/nvim-treesitter/nvim-treesitter-textobjects
   },
-  {
-    'nvim-pack/nvim-spectre',
-    config = function()
-      --require('spectre').setup {
-      --default = {
-      --replace = {
-      -- cmd = 'oxi',
-      --},
-      --},
-      --}
-    end,
-  },
-  'github/copilot.vim',
-  'tpope/vim-commentary',
-  {
-    'CopilotC-Nvim/CopilotChat.nvim',
-    branch = 'main',
-    cmd = 'CopilotChat',
-    opts = function()
-      local user = vim.env.USER or 'User'
-      user = user:sub(1, 1):upper() .. user:sub(2)
-      return {
-        auto_insert_mode = true,
-        question_header = '  ' .. user .. ' ',
-        answer_header = '  Copilot ',
-        window = {
-          width = 0.4,
-        },
-      }
-    end,
-    keys = {
-      { '<c-s>', '<CR>', ft = 'copilot-chat', desc = 'Submit Prompt', remap = true },
-      { '<leader>a', '', desc = '+ai', mode = { 'n', 'v' } },
-      {
-        '<leader>aa',
-        function()
-          return require('CopilotChat').toggle()
-        end,
-        desc = 'Toggle (CopilotChat)',
-        mode = { 'n', 'v' },
-      },
-      {
-        '<leader>ax',
-        function()
-          return require('CopilotChat').reset()
-        end,
-        desc = 'Clear (CopilotChat)',
-        mode = { 'n', 'v' },
-      },
-      {
-        '<leader>aq',
-        function()
-          local input = vim.fn.input 'Quick Chat: '
-          if input ~= '' then
-            require('CopilotChat').ask(input)
-          end
-        end,
-        desc = 'Quick Chat (CopilotChat)',
-        mode = { 'n', 'v' },
-      },
-      -- { '<leader>ap', M.pick 'prompt', desc = 'Prompt Actions (CopilotChat)', mode = { 'n', 'v' } },
-    },
-    config = function(_, opts)
-      local chat = require 'CopilotChat'
-
-      vim.api.nvim_create_autocmd('BufEnter', {
-        pattern = 'copilot-chat',
-        callback = function()
-          vim.opt_local.relativenumber = false
-          vim.opt_local.number = false
-        end,
-      })
-
-      chat.setup(opts)
-    end,
-  },
   -- The following comments only work if you have downloaded the kickstart repo, not just copy pasted the
   -- init.lua. If you want these files, they are in the repository, so you can just download them and
   -- place them in the correct locations.
@@ -1031,7 +840,7 @@ require('lazy').setup({
   --    This is the easiest way to modularize your config.
   --
   --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
-  -- { import = 'custom.plugins' },
+  { import = 'custom.plugins' },
   --
   -- For additional information with loading, sourcing and examples see `:help lazy.nvim-🔌-plugin-spec`
   -- Or use telescope!

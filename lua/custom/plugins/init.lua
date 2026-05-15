@@ -1,7 +1,3 @@
--- You can add your own plugins here or in other files in this directory!
---  I promise not to create any merge conflicts in this directory :)
---
--- See the kickstart.nvim README for more information
 return {
   {
     'pmizio/typescript-tools.nvim',
@@ -35,7 +31,7 @@ return {
           -- https://github.com/microsoft/TypeScript/blob/3c221fc086be52b19801f6e8d82596d04607ede6/src/compiler/utilitiesPublic.ts#L620
           tsserver_locale = 'en',
           -- mirror of VSCode's `typescript.suggest.completeFunctionCalls`
-          complete_function_calls = false,
+          complete_function_calls = true,
           include_completions_with_insert_text = true,
           -- CodeLens
           -- WARNING: Experimental feature also in VSCode, because it might hit performance of server.
@@ -48,7 +44,7 @@ return {
           -- WARNING: it is disabled by default (maybe you configuration or distro already uses nvim-ts-autotag,
           -- that maybe have a conflict if enable this feature. )
           jsx_close_tag = {
-            enable = false,
+            enable = true,
             filetypes = { 'javascriptreact', 'typescriptreact' },
           },
         },
@@ -63,7 +59,105 @@ return {
       'nvim-tree/nvim-web-devicons',
     },
     config = function()
-      require('nvim-tree').setup {}
+      require('nvim-tree').setup {
+        sort = {
+          sorter = 'case_sensitive',
+        },
+        view = {
+          width = 30,
+          adaptive_size = true,
+        },
+        renderer = {
+          group_empty = true,
+        },
+        filters = {
+          dotfiles = true,
+        },
+      }
+    end,
+  },
+  {
+    'rose-pine/neovim',
+    priority = 1000,
+    init = function()
+      require('rose-pine').setup { styles = { transparency = true } }
+      vim.cmd.colorscheme 'rose-pine'
+      vim.cmd.hi 'Comment gui=none'
+    end,
+  },
+  {
+    'nvim-pack/nvim-spectre',
+    config = function()
+      --require('spectre').setup {
+      --default = {
+      --replace = {
+      -- cmd = 'oxi',
+      --},
+      --},
+      --}
+    end,
+  },
+  'github/copilot.vim',
+  'tpope/vim-commentary',
+  {
+    'CopilotC-Nvim/CopilotChat.nvim',
+    branch = 'main',
+    cmd = 'CopilotChat',
+    opts = function()
+      local user = vim.env.USER or 'User'
+      user = user:sub(1, 1):upper() .. user:sub(2)
+      return {
+        auto_insert_mode = true,
+        question_header = '  ' .. user .. ' ',
+        answer_header = '  Copilot ',
+        window = {
+          width = 0.4,
+        },
+      }
+    end,
+    keys = {
+      { '<c-s>', '<CR>', ft = 'copilot-chat', desc = 'Submit Prompt', remap = true },
+      { '<leader>a', '', desc = '+ai', mode = { 'n', 'v' } },
+      {
+        '<leader>aa',
+        function()
+          return require('CopilotChat').toggle()
+        end,
+        desc = 'Toggle (CopilotChat)',
+        mode = { 'n', 'v' },
+      },
+      {
+        '<leader>ax',
+        function()
+          return require('CopilotChat').reset()
+        end,
+        desc = 'Clear (CopilotChat)',
+        mode = { 'n', 'v' },
+      },
+      {
+        '<leader>aq',
+        function()
+          local input = vim.fn.input 'Quick Chat: '
+          if input ~= '' then
+            require('CopilotChat').ask(input)
+          end
+        end,
+        desc = 'Quick Chat (CopilotChat)',
+        mode = { 'n', 'v' },
+      },
+    },
+    config = function(_, opts)
+      local chat = require 'CopilotChat'
+
+      vim.api.nvim_create_autocmd('BufEnter', {
+        pattern = 'copilot-chat',
+        callback = function()
+          vim.opt_local.relativenumber = false
+          vim.opt_local.number = false
+        end,
+      })
+
+      chat.setup(opts)
     end,
   },
 }
