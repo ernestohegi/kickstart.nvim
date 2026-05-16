@@ -51,6 +51,8 @@ External Requirements:
 > [!NOTE]
 > [Backup](#FAQ) your previous configuration (if any exists)
 
+This config is based on [kickstart.nvim](https://github.com/ernestohegi/kickstart.nvim).
+
 Neovim's configurations are located under the following paths, depending on your OS:
 
 | OS | PATH |
@@ -82,7 +84,7 @@ it's recommended to track it in version control (see `:help vim.pack-lockfile`).
 <details><summary> Linux and Mac </summary>
 
 ```sh
-git clone https://github.com/ernestohegi/kickstart.nvim.git "${XDG_CONFIG_HOME:-$HOME/.config}"/nvim
+git clone git@github.com:ernestohegi/kickstart.nvim.git "${XDG_CONFIG_HOME:-$HOME/.config}"/nvim
 ```
 
 </details>
@@ -92,13 +94,13 @@ git clone https://github.com/ernestohegi/kickstart.nvim.git "${XDG_CONFIG_HOME:-
 If you're using `cmd.exe`:
 
 ```
-git clone https://github.com/nvim-lua/kickstart.nvim.git "%localappdata%\nvim"
+git clone git@github.com:ernestohegi/kickstart.nvim.git "%localappdata%\nvim"
 ```
 
 If you're using `powershell.exe`
 
 ```
-git clone https://github.com/nvim-lua/kickstart.nvim.git "${env:LOCALAPPDATA}\nvim"
+git clone git@github.com:ernestohegi/kickstart.nvim.git "${env:LOCALAPPDATA}\nvim"
 ```
 
 </details>
